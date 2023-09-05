@@ -1,6 +1,7 @@
 name: Windows Build
 
 on:
+  workflow_dispatch:
   push:
     paths-ignore:
       - '**.md'
@@ -29,3 +30,12 @@ jobs:
       - name: Build Project
         working-directory: ./build
         run: cmake --build .
+        
+      - name: Upload binary
+        if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v3
+        with:
+          name: InstaOrder
+          path: |
+            build/*
+          retention-days: 60
